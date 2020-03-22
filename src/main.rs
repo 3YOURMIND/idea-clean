@@ -11,10 +11,13 @@ use regex::Regex;
 fn main() { delete_idea_cache(); }
 
 fn delete_idea_cache() {
-    let path_str = env::args().nth(1).expect("Missing");
-    let data = fs::read_to_string(&path_str).expect("Unable to read file");
-    let data_cow = regex_filter(&data);
-    fs::write("/tmp/ws.xml", data_cow.as_bytes());
+    let path = env::args().nth(1).expect("Insert the path to the .idea folder");
+    let workspace_path = path.clone() + "/workspace.xml";
+    let workspace_backup_path = path + "/workspace.xml.bak";
+    let data = fs::read_to_string(&workspace_path).expect("Unable to read input file");
+    fs::write(workspace_backup_path, data.as_bytes()).expect("Unable to write backup file");
+    let filtered_data = regex_filter(&data);
+    fs::write(workspace_path, filtered_data.as_bytes()).expect("Unable to write result file");
 }
 
 fn regex_filter(data: &str) -> Cow<str> {
@@ -69,11 +72,4 @@ mod tests {
     </state>"#;
         assert_eq!(regex_filter(BODY), EXPECTED);
     }
-
-// #[test]
-//   fn test_bad_add() {
-//     // This assert would fire and test will fail.
-//     // Please note, that private functions can be tested too!
-//     assert_eq !(bad_add(1, 2), 3);
-//   }
 }
