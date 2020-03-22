@@ -17,6 +17,7 @@ Invoke with
 ./target/debug/idea-clean /path/to/.idea
 ```
 .idea being the folder containing the settings and the view cache for clion/idea/pycharm projects
+idea-clean will modify the .idea/workspace.xml file and create a backup in the same folder
 
 ### lazy typer ###
 ```
